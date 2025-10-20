@@ -1,0 +1,30 @@
+services:
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      # Уникальный ID узла в KRaft режиме
+      KAFKA_NODE_ID: 1
+      # Роли процесса: брокер и контроллер (KRaft)
+      KAFKA_PROCESS_ROLES: broker,controller
+      # Слушатели для клиентских и контроллерных подключений
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      # Адрес, который рекламируется клиентам (хост и порт)
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      # Имя лисенера контроллера
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      # Соответствие имен лисенеров и протоколов безопасности
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      # Конфигурация кворума контроллеров (формат: id@host:port)
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      # Репликация для внутренней темы смещений (single-node -> 1)
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      # Репликация для лога состояний транзакций
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      # Минимальное количество in-sync реплик для лога транзакций
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      # Путь для хранения логов внутри контейнера
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      # Опциональный идентификатор кластера (может быть сгенерирован)
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
